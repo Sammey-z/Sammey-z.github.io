@@ -1,0 +1,21 @@
+:root {
+  --navigator-bg: #000;
+}
+
+.navigator-bar {
+  background: var(--navigator-bg);
+}
+
+.navigator-list {
+  display: flex;
+  list-style: none;
+}
+
+.navigator-list li {
+  padding: 7px;
+  cursor: pointer;
+}
+.navigator-list li a {
+  text-decoration: none;
+  color: white;
+}
