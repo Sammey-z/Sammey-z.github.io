@@ -1,40 +1,324 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sammey</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23000'/%3E%3Ctext x='35' y='70' font-size='60' text-anchor='middle' fill='%23fff' font-family='monospace' font-weight='bold'%3E%3E%3C/text%3E%3Ctext x='60' y='70' font-size='60' text-anchor='middle' fill='%23fff' font-family='monospace' font-weight='bold'%3E_%3Canimate attributeName='opacity' values='1;0' dur='1s' repeatCount='indefinite' calcMode='discrete'/%3E%3C/text%3E%3C/svg%3E" type="image/svg+xml">
-  <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "Sammey",
-      "url": "https://sammey-z.github.io",
-      "description": "Desarrollador web especializado en frontend y backend",
-      "sameAs": [
-        "https://github.com/Sammey-z"
-      ],
-      "knowsAbout": [
-        "HTML",
-        "CSS",
-        "JavaScript",
-        "PHP",
-        "MySQL",
-        "Service Workers"
-      ],
-      "jobTitle": "Desarrollador Web",
-      "worksFor": {
-        "@type": "Organization",
-        "name": "Freelance"
-      }
-    </script>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/css/primer.css">
     <style>
-      * {
-        font-family: Arial, sans-serif;
-        margin: 0px;
-        box-sizing: border-box;
+        :root {
+            --nav-bg: #011;
+            --nav-border: rgba(255, 255, 255, 0.5);
+            --text-color: #f0f6fc;
+        }
+        
+        body { 
+            margin: 0; 
+            font-family: -apple-system, sans-serif;
+            background: #444;
+            color: var(--text-color);
+            transition: transform 0.3s ease, margin-left 0.3s ease;
+        }
+        
+        body.menu-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            margin-left: 10px;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+            border-radius: 8px 0 0 8px;
+        }
+        
+        .nav-minimal {
+            background: var(--nav-bg);
+            padding: 9px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border-bottom: 1px solid var(--nav-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .hamburger-btn {
+            background: transparent;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            transition: all 0.2s ease;
+        }
+        
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .hamburger-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        .site-title {
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+            padding: 2px 0;
+        }
+        
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            left: -280px;
+            width: 280px;
+            height: 100vh;
+            background: var(--nav-bg);
+            border-right: 1px solid var(--nav-border);
+            z-index: 1000;
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.4);
+            overflow-y: auto;
+        }
+        
+        .sidebar-menu.show {
+            left: 0;
+        }
+        
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            backdrop-filter: blur(2px);
+        }
+        
+        .menu-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .menu-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--nav-border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            position: sticky;
+            top: 0;
+        }
+        
+        .menu-content {
+            padding: 16px 0;
+        }
+        
+        .menu-section {
+            margin-bottom: 20px;
+        }
+        
+        .menu-section-title {
+            padding: 8px 16px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: var(--text-color);
+            text-decoration: none;
+            transition: background 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-left-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .menu-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            fill: currentColor;
+            opacity: 0.8;
+        }
+        
+        .menu-text {
+            flex: 1;
+            font-size: 14px;
+        }
+        
+        .close-menu {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 8px;
+            margin-left: auto;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-menu:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar-menu {
+                width: 250px;
+                left: -250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-header">
+            <svg class="menu-icon" viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+            <h1 class="site-title">Sammey</h1>
+            <button class="close-menu" id="closeMenu" aria-label="Cerrar menú">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div class="menu-content">
+            <div class="menu-section">
+                <div class="menu-section-title">Navegación</div>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8.156 1.835a.25.25 0 00-.312 0l-5.25 4.2a.25.25 0 00-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 01.75-.75h3.5a.75.75 0 01.75.75v5.25h2.75a.25.25 0 00.25-.25V6.23a.25.25 0 00-.094-.195l-5.25-4.2zM6.906.664a1.75 1.75 0 012.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0113.25 15h-3.5a.75.75 0 01-.75-.75V9H7v5.25a.75.75 0 01-.75.75h-3.5A1.75 1.75 0 011 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2h-.001z"/>
+                    </svg>
+                    <span class="menu-text">Inicio</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0114.25 16H1.75A1.75 1.75 0 010 14.25V1.75zM1.5 6.5v7.75c0 .138.112.25.25.25H5v-8H1.5zM5 5H1.5V1.75a.25.25 0 01.25-.25H5V5zm1.5 1.5v8h7.75a.25.25 0 00.25-.25V6.5h-8zm8-1.5h-8V1.5h7.75a.25.25 0 01.25.25V5z"/>
+                    </svg>
+                    <span class="menu-text">Proyectos</span>
+                </a>
+            </div>
+            
+            <div class="menu-section">
+                <div class="menu-section-title">Documentos</div>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0114.25 16H1.75A1.75 1.75 0 010 14.25V1.75zm1.75-.25a.25.25 0 00-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 00.25-.25V1.75a.25.25 0 00-.25-.25H1.75zM7.25 7a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5H8a.75.75 0 01-.75-.75zM7 10.75a.75.75 0 01.75-.75h2.5a.75.75 0 010 1.5h-2.5a.75.75 0 01-.75-.75zm-4-5.5a.75.75 0 01.75-.75h.5a.75.75 0 010 1.5h-.5a.75.75 0 01-.75-.75zm0 3.5a.75.75 0 01.75-.75h.5a.75.75 0 010 1.5h-.5a.75.75 0 01-.75-.75z"/>
+                    </svg>
+                    <span class="menu-text">Documentación</span>
+                </a>
+                <a href="#" class="menu-item">
+                    <svg class="menu-icon" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M2 2.5A2.5 2.5 0 014.5 0h8.75a.75.75 0 01.75.75v12.5a.75.75 0 01-.75.75h-2.5a.75.75 0 110-1.5h1.75v-2h-8a1 1 0 00-.714 1.7.75.75 0 01-1.072 1.05A2.495 2.495 0 012 11.5v-9zm10.5-1V9h-8c-.356 0-.694.074-1 .208V2.5a1 1 0 011-1h8zM5 12.25v3.25a.25.25 0 00.4.2l1.45-1.087a.25.25 0 01.3 0L8.6 15.7a.25.25 0 00.4-.2v-3.25a.25.25 0 00-.25-.25h-3.5a.25.25 0 00-.25.25z"/>
+                    </svg>
+                    <span class="menu-text">API Reference</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <nav class="nav-minimal">
+        <button class="hamburger-btn" id="menuButton" aria-label="Abrir menú">
+            <svg class="hamburger-icon" viewBox="0 0 24 24">
+                <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/>
+            </svg>
+        </button>
+        <h1 class="site-title">Sammey</h1>
+    </nav>
+    
+    <main class="main-content">
+
+    </main>
+
+    <script>
+        const sidebarMenu = document.getElementById('sidebarMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuButton = document.getElementById('menuButton');
+        const closeMenu = document.getElementById('closeMenu');
+        const body = document.body;
+        
+        function toggleMenu() {
+            const isOpen = sidebarMenu.classList.contains('show');
+            
+            if (isOpen) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+        }
+        
+        function openSidebar() {
+            sidebarMenu.classList.add('show');
+            menuOverlay.classList.add('show');
+            body.classList.add('menu-open');
+            
+            const scrollY = window.scrollY;
+            document.body.style.top = `-${scrollY}px`;
+        }
+        
+        function closeSidebar() {
+            sidebarMenu.classList.remove('show');
+            menuOverlay.classList.remove('show');
+            body.classList.remove('menu-open');
+            
+            const scrollY = Math.abs(parseInt(document.body.style.top || '0'));
+            document.body.style.top = '';
+            window.scrollTo(0, scrollY);
+        }
+        
+        menuButton.addEventListener('click', openSidebar);
+        closeMenu.addEventListener('click', closeSidebar);
+        menuOverlay.addEventListener('click', closeSidebar);
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeSidebar();
+        });
+        
+        document.querySelectorAll('.menu-item').forEach(item => {
+            item.addEventListener('click', () => {
+                setTimeout(closeSidebar, 150);
+            });
+        });
+        
+        sidebarMenu.addEventListener('wheel', (e) => {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>        box-sizing: border-box;
       }
     </style>
     <link rel="stylesheet" href="assets/css/index.css">
